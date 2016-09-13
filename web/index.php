@@ -1,7 +1,7 @@
 <?php 
 
 $cmd = isset($_REQUEST['cmd']) ? $_REQUEST['cmd'] : '';
-if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p' )) ) {
+if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p', 't' )) ) {
 
     $myfile = fopen("/tmp/pianobar_ctl", "w") or die("Unable to open file!");
     echo fwrite($myfile, $cmd);
