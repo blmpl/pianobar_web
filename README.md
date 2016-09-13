@@ -15,5 +15,11 @@ mkfifo /tmp/pianobar_ctl
 chmod 666 /tmp/pianobar_ctl
 ```
 
+or replace last command with something more reasonable like
+```
+chown your_login:www-data /tmp/pianobar_ctl
+chmod 660 /tmp/pianobar_ctl
+```
+
 and start pianobar on console ;)
 

@@ -43,7 +43,7 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p' )) ) {
         <script src="js/jquery-2.2.0.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <style>
-            button {
+            .m-button {
                 width: 60px !important;
                 margin-top: 5px;
             }
@@ -54,22 +54,34 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p' )) ) {
             <div class="jumbotron" style='text-align: center'>
                 <div>
                     <div style="float: left; max-width:333px; text-align: left">
-                        <h2 id='artist'><?php echo $data['artist']?></h2>
+                        <h2 id='artist'><?= $data['artist'] ?></h2>
                         <h3 id='title'><?php echo $data['title'] . (isset($data['rating']) ? '(&#9733;)' : '') ?></h3>
                     </div>
                     <div style="margin-top: 20px; width:125px;float: right;">
                         <div>
-                            <button type="button" class="btn btn-sm btn-primary" onclick="javascript:send_key('p')">pause</button>
-                            <button type="button" class="btn btn-sm btn-primary" onclick="javascript:send_key('n')">next</button>
+                            <button type="button" class="btn btn-sm btn-primary m-button" onclick="javascript:send_key('p')">pause</button>
+                            <button type="button" class="btn btn-sm btn-primary m-button" onclick="javascript:send_key('n')">next</button>
                         </div>
                         <div>
-                            <button id="like" type="button" class="btn btn-sm btn-success" onclick="javascript:send_key('+')">like</button> 
-                            <button type="button" class="btn btn-sm btn-danger" onclick="javascript: confirm('Are you sure') == true && send_key('-')">ban</button> 
+                            <button id="like" type="button" class="btn btn-sm btn-success m-button" onclick="javascript:send_key('+')">like</button> 
+                            <button type="button" class="btn btn-sm btn-danger m-button" data-toggle="modal" data-target="#confirm">ban</button> 
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="confirm" role="dialog"> 
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <p>Are you sure to ban a song?</p>
+                            <p>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="javascript:end_key('-')">Yes</button>
+                                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="tooltip" data-placement="bottom" title="ban song for 1 month" onclick="javascript:end_key('t')">I'm just tired</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                            </p>    
                         </div>
                     </div>
                 </div>
                 <div style="display: inline-block;  margin-top: 30px;">
-                    <img id=cover style="width: 100%" src=" <?php echo $data['coverArt'] ?>">
+                    <img id=cover style="width: 100%" src=" <?= $data['coverArt'] ?>">
                 </div>
                 <!--img id=cover style="display: none; width: 500px; height: 500px;"></br-->
             </div>
@@ -78,12 +90,20 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p' )) ) {
         <script type="text/javascript">
         var is_old = navigator.userAgent.indexOf("Android 1.6") > 0;
 
-        var is_active = 1;
+        var window_has_focus = 1;
         var timer;
+        var last_title;
+        var update = 0;
+
         if (is_old) 
             setTimeout(window.location.href='?', 10000);
 
+        $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip(); 
+        });
+
         function send_key( key ) {
+            update = 1;
             if (is_old) {
                 url = '?cmd=' + encodeURIComponent(key);
                 //location.href = url;
@@ -107,13 +127,18 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p' )) ) {
                           //      location.reload('');
                           //  }, 1000);
                           json = JSON.parse(data);
-                          if (json.artist) {
+                          if (json.artist && (json.title != last_title || update) ) {
+
+                              $('#confirm').modal('hide');
+                              last_title = json.title;
+                              update = 0;
+
                               document.title = (json.rating ? '★': '♬' ) + json.artist + ' - ' + json.title;
                               //$('#title').html(json.artist + ' - ' + json.title + ( json.rating ? ' (&hearts;)' : ''));
                               $('#title').html(json.title + ( json.rating ? ' (&#9733;)' : ''));
                               $('#artist').html(json.artist);
                               $('#cover').attr("src_tmp",json.coverArt);
-                              if (is_active == 1  &&  $('#cover').attr("src") != json.coverArt) {
+                              if (window_has_focus == 1  &&  $('#cover').attr("src") != json.coverArt) {
                                     $('#cover').attr("src",json.coverArt);
                               }
                               $('#cover').show();
@@ -129,8 +154,13 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p' )) ) {
         //        document.title = e.which
         //});
         if (! is_old ){
-            $(window).blur(function(){ is_active=0  });
-            $(window).focus(function(){ if (is_active==0) {$('#cover').attr("src", $('#cover').attr("src_tmp") )}; is_active=1  });
+            $(window).blur(function(){ window_has_focus = 0  });
+            $(window).focus(function(){ 
+                if (window_has_focus == 0) {
+                    $('#cover').attr("src", $('#cover').attr("src_tmp") )
+                }; 
+                window_has_focus = 1  
+            });
         
             refresh_title();
         }
