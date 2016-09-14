@@ -1,10 +1,10 @@
 <?php 
 
 $cmd = isset($_REQUEST['cmd']) ? $_REQUEST['cmd'] : '';
-if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p', 't' )) ) {
+if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('/^s\d+$/',$cmd) ) ) {
 
     $myfile = fopen("/tmp/pianobar_ctl", "w") or die("Unable to open file!");
-    echo fwrite($myfile, $cmd);
+    echo fwrite($myfile, $cmd . "\n");
     fclose($myfile);
 
     if ($_POST['cmd'])
@@ -51,9 +51,9 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p', 't' )) ) {
     </head>
     <body >
         <div class="container theme-showcase" role="main" style="max-width: 650px !important; margin-top:20px;">
-            <div class="jumbotron" style='text-align: center'>
+            <div class="jumbotron">
                 <div>
-                    <div style="float: left; max-width:333px; text-align: left">
+                  <div style="float: left; max-width:333px; text-align: left">
                         <h2 id='artist'><?= $data['artist'] ?></h2>
                         <h3 id='title'><?php echo $data['title'] . (isset($data['rating']) ? '(&#9733;)' : '') ?></h3>
                     </div>
@@ -68,8 +68,9 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p', 't' )) ) {
                         </div>
                     </div>
                 </div>
+
                 <div class="modal fade" id="confirm" role="dialog"> 
-                    <div class="modal-dialog">
+                    <div class="modal-dialog" style='text-align: center'>
                         <div class="modal-content">
                             <p>Are you sure to ban a song?</p>
                             <p>
@@ -84,6 +85,19 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p', 't' )) ) {
                     <img id=cover style="width: 100%" src=" <?= $data['coverArt'] ?>">
                 </div>
                 <!--img id=cover style="display: none; width: 500px; height: 500px;"></br-->
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="width: 100%">
+                        <span id="station"></span> station
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu" style="width: 100%; text-align:center">
+                        <?php
+                            if ($data['stationCount'] > 0 ) 
+                                for($i=0; $i < $data['stationCount']; $i++) {
+                                    printf('<li type="station" id="station%d"><a href="#" onclick="javascript:send_key(\'s%d\')">%s </a></li>' . "\n", $i, $i, $data['station' . $i]);
+                                }
+                        ?>    
+                        </ul>
+                    </div>
             </div>
         </div>
 
@@ -143,6 +157,11 @@ if ( $cmd and in_array($cmd, array('+', '-' ,'n', 'p', 't' )) ) {
                               }
                               $('#cover').show();
                               $('#like').prop("disabled", json.rating == 1);
+
+                              $('#station').html(json.stationName);
+                              jQuery("li[type='station']").each(function() {
+                                  (this.innerText == json.stationName) ? $(this).addClass("disabled") : $(this).removeClass("disabled");
+                              });
                           }
                         $('body').css('cursor', 'default'); 
                         }
