@@ -93,7 +93,7 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
                         <?php
                             if ($data['stationCount'] > 0 ) 
                                 for($i=0; $i < $data['stationCount']; $i++) {
-                                    printf('<li type="station" id="station%d"><a href="#" onclick="javascript:send_key(\'s%d\')">%s </a></li>' . "\n", $i, $i, $data['station' . $i]);
+                                    printf('<li type="station" id="station%d"><a href="#" onclick="javascript:send_key(\'s%d\')">%s</a></li>' . "\n", $i, $i, $data['station' . $i]);
                                 }
                         ?>    
                         </ul>
