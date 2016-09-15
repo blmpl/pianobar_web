@@ -74,8 +74,8 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
                         <div class="modal-content">
                             <p>Are you sure to ban a song?</p>
                             <p>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="javascript:end_key('-')">Yes</button>
-                                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="tooltip" data-placement="bottom" title="ban song for 1 month" onclick="javascript:end_key('t')">I'm just tired</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="javascript:send_key('-')">Yes</button>
+                                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="tooltip" data-placement="bottom" title="ban song for 1 month" onclick="javascript:send_key('t')">I'm just tired</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
                             </p>    
                         </div>
