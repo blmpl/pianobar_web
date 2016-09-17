@@ -19,7 +19,7 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
     while(!feof($myfile)) {
         #list($key, $value) = explode("=", str_replace(PHP_EOL, '',  fgets($myfile) ), 2);
         $res = explode("=", str_replace(PHP_EOL, '',  fgets($myfile) ), 2);
-        if ($res[0] and $res[1]) {
+        if (isset($res[1])) {
             $data[$res[0] ] = $res[1];
         }
     }
@@ -145,9 +145,9 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
                               last_title = json.title;
                               update = 0;
 
-                              document.title = (json.rating ? '★': '♬' ) + json.artist + ' - ' + json.title;
+                              document.title = (json.rating == 1 ? '★': '♬' ) + json.artist + ' - ' + json.title;
                               //$('#title').html(json.artist + ' - ' + json.title + ( json.rating ? ' (&hearts;)' : ''));
-                              $('#title').html(json.title + ( json.rating ? ' (&#9733;)' : ''));
+                              $('#title').html(json.title + ( json.rating == 1 ? ' (&#9733;)' : ''));
                               $('#artist').html(json.artist);
                               $('#cover').attr("src_tmp",json.coverArt);
                               if (window_has_focus == 1  &&  $('#cover').attr("src") != json.coverArt) {
