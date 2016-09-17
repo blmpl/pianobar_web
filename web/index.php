@@ -107,7 +107,6 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
         var window_has_focus = 1;
         var timer;
         var last_title;
-        var update = 0;
 
         if (is_old) 
             setTimeout(window.location.href='?', 10000);
@@ -117,7 +116,6 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
         });
 
         function send_key( key ) {
-            update = 1;
             if (is_old) {
                 url = '?cmd=' + encodeURIComponent(key);
                 //location.href = url;
@@ -141,7 +139,7 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
                           //      location.reload('');
                           //  }, 1000);
                           json = JSON.parse(data);
-                          if (json.artist && (json.title != last_title || update) ) {
+                          if (json.artist) {
 
                               $('#confirm').modal('hide');
                               last_title = json.title;
