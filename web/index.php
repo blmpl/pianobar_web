@@ -55,7 +55,7 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
                 <div>
                   <div style="float: left; max-width:333px; text-align: left">
                         <h2 id='artist'><?= $data['artist'] ?></h2>
-                        <h3 id='title'><?php echo $data['title'] . (isset($data['rating']) ? '(&#9733;)' : '') ?></h3>
+                        <h3 id='title'><?php echo $data['title'] . ($data['rating'] == 1 ? '(&#9733;)' : '') ?></h3>
                     </div>
                     <div style="margin-top: 20px; width:125px;float: right;">
                         <div>
@@ -130,6 +130,7 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
         }
 
         function refresh_title() {
+            if (! $('#confirm').hasClass('in'))
                    $.ajax({
                         type: "POST",
                         data: 'get=1',
