@@ -81,8 +81,8 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
                         </div>
                     </div>
                 </div>
-                <div style="display: inline-block;  margin-top: 30px;">
-                    <img id=cover style="width: 100%" src=" <?= $data['coverArt'] ?>">
+                <div style="display: inline-block;  margin-top: 30px; width: 100%;">
+                    <img id=cover style="width: 100%; max-height: 500px; max-width:500px" src=" <?= $data['coverArt'] ?>">
                 </div>
                 <!--img id=cover style="display: none; width: 500px; height: 500px;"></br-->
                     <div class="dropdown">
@@ -151,7 +151,7 @@ if ( $cmd and ( in_array($cmd, array('+', '-' ,'n', 'p', 't' ) ) or preg_match('
                               $('#title').html(json.title + ( json.rating == 1 ? ' (&#9733;)' : ''));
                               $('#artist').html(json.artist);
                               $('#cover').attr("src_tmp",json.coverArt);
-                              if (window_has_focus == 1  &&  $('#cover').attr("src") != json.coverArt) {
+                              if ( ( window_has_focus == 1 || location.search.search("forceCover=1") > 0) &&  $('#cover').attr("src") != json.coverArt) {
                                     $('#cover').attr("src",json.coverArt);
                               }
                               $('#cover').show();
